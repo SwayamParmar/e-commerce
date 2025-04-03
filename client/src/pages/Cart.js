@@ -25,16 +25,18 @@ const Cart = () => {
     };
 
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const discountAmount = totalPrice * 0.15;
+    const finalAmount = totalPrice - discountAmount;
 
     return (
         <div className="w-11/12 mx-auto p-4 flex flex-col lg:flex-row gap-6">
             <div className="flex-1 space-y-4">
                 {cart.length > 0 ? (
                     cart.map((product) => (
-                        <div key={product.id} className="flex items-center border p-4 rounded-r-md hover:rounded-lg shadow-sm hover:shadow-md">
+                        <div key={product.id} className="flex items-start border p-4 rounded-r-md hover:rounded-lg shadow-sm hover:shadow-md">
                             <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded" />
                             <div className="flex-1 ml-4">
-                                <h2 className="text-lg font-semibold truncate w-full">{product.name}</h2>
+                                <h2 className="text-lg font-semibold truncate w-96">{product.name}</h2>
                                 <p className="text-gray-600 line-clamp-2">{product.description}</p>
 
                                 <div className="flex items-center mt-2">
@@ -60,16 +62,16 @@ const Cart = () => {
                 <div className="w-full lg:w-1/3 border p-6 rounded-lg shadow-md h-fit self-start">
                     <h2 className="text-xl font-semibold mb-4">Price Details</h2>
                     <div className="flex justify-between">
-                        <span>Total Price</span>
+                        <span>Actual Price</span>
                         <span className="font-semibold"><FormatPrice price={totalPrice} /></span>
                     </div>
                     <div className="flex justify-between text-green-600 mt-2">
                         <span>Discount</span>
-                        <span>-2000</span>
+                        <span><FormatPrice price={discountAmount}/> </span>
                     </div>
                     <div className="flex justify-between border-t pt-2 mt-2">
-                        <span className="font-semibold">Final Amount</span>
-                        <span className="font-semibold"><FormatPrice price={(totalPrice - 200000)} /></span>
+                        <span className="font-semibold">Total Amount</span>
+                        <span className="font-semibold"><FormatPrice price={(finalAmount)} /></span>
                     </div>
                     <button 
                         className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"

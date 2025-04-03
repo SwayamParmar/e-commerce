@@ -1,8 +1,24 @@
 import React, { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { toast } from 'react-toastify';
+import { Slide } from 'react-toastify';
+
 
 const PlaceOrderForm = ({ isOpen, onClose }) => {
     const { cart, setCart } = useContext(CartContext); // Get cart data from context
+
+    const showToast = (message, type = 'error') => {
+        toast[type](message, {
+            position: 'top-right',
+            autoClose: 3000,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: type === 'error' ? 'colored' : 'dark',
+            transition: Slide,
+        });
+    };
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -16,8 +32,14 @@ const PlaceOrderForm = ({ isOpen, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.firstName || !formData.lastName || !formData.address) {
-            alert("All fields are required");
+        if (!formData.firstName) {
+            showToast("First Name is required", 'error');
+            return;
+        } else if (!formData.lastName) {
+            showToast("Last Name is required" , 'error');
+            return;
+        } else if (!formData.address) {
+            showToast("Address is required" , 'error');
             return;
         }
 
@@ -35,14 +57,14 @@ const PlaceOrderForm = ({ isOpen, onClose }) => {
 
             const data = await response.json();
             if (response.ok) {
-                alert("Order placed successfully buddy!");
+                showToast("Order placed successfully!", 'success');
                 setCart([]);
                 onClose();
             } else {
-                alert("Error placing order: " + data.error);
+                showToast(data.error || 'Login failed, please try again', 'error');
             }
         } catch (error) {
-            alert("Failed to connect to server");
+            showToast("Failed to connect to server", 'error');
         }
     };
 

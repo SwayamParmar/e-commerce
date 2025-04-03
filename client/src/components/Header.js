@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { CartContext } from "../context/CartContext";
 
 const Header = () => {
     const [isLoaded, setIsLoaded] = useState(false);  // Add a loading state
+    const { cart } = useContext(CartContext);
 
     useEffect(() => {
         setIsLoaded(true); // Set loading complete after component is mounted
@@ -11,6 +13,9 @@ const Header = () => {
     if (!isLoaded) {
         return null; // Avoid rendering anything until loaded
     }
+
+    // Calculate total items in the cart
+    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
     const WebHeader = () => {
         return (
@@ -23,9 +28,14 @@ const Header = () => {
                             </NavLink>
                         </div>
                         <nav className="flex items-center space-x-4 transition-colors duration-300">
-                            <NavLink to="/cart" className="no-underline">
-                                <button className="text-base text-slate-700 dark:text-white font-medium px-4 py-2 bg-[#f4f5f9] hover:text-slate-800 transition-colors duration-300 border-0 rounded-2xl">
+                            <NavLink to="/cart" className="no-underline relative">
+                                <button className="text-base text-slate-700 dark:text-white font-medium px-4 py-2 bg-[#f4f5f9] hover:text-slate-800 transition-colors duration-300 border-0 rounded-2xl relative">
                                     Cart
+                                    {cartCount > 0 && (
+                                        <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                                            {cartCount}
+                                        </span>
+                                    )}
                                 </button>
                             </NavLink>
                         </nav>
